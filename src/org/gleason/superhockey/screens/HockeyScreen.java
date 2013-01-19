@@ -186,7 +186,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	private float startX = 0;
 	private float startY = 0;
 //	private boolean velocitySet = false;
-	private Boolean goingUp = null;
+	private Boolean goingUp = false;
+	private Boolean goingDown = false;
 	public void onTouch(MotionEvent ev) {
 		float x = ev.getX();
 	    float y = Gdx.graphics.getHeight() - ev.getY();
@@ -207,10 +208,13 @@ public class HockeyScreen implements Screen, ContactListener {
 	    			goingUp=true;
 //	    			velocitySet = true;
 	    		}
-	    		else{
-	    			if(goingUp){
+	    		else if(currentMotion ==0){
+	    			
+	    		}
+	    		else if(currentMotion<0){
+	    			if(!goingDown){
 	    				leftPad.getBody().setLinearVelocity(0, -10000f);
-	    				goingUp=false;
+	    				goingDown=true;
 	    			}
 //	    			velocitySet = true;
 	    		}
@@ -222,6 +226,7 @@ public class HockeyScreen implements Screen, ContactListener {
 	    	startY=0;
 	    	leftPad.getBody().setLinearVelocity(0, 0f);
 	    	goingUp = false;
+	    	goingDown = false;
 //	    	velocitySet = false;
 	    }
 	    
