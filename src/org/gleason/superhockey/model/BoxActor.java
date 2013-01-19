@@ -23,16 +23,30 @@ public class BoxActor extends GameActor {
 	}
 	
 	public boolean isTouched(float x, float y){
-		Vector2 position = this.getBody().getPosition();
-		float yStart = position.y-getHeight();
-		float xStart = position.x-getWidth();
-		float yEnd = position.y+getHeight();
-		float xEnd = position.x+getWidth();
+		
+		
 		boolean returnVal = false;
-		if(x<=xEnd && x >= xStart && y>=yStart && y <= yEnd){
+		if(x<=getEndX() && x >= getStartX() && y>=getStartY() && y <= getEndY()){
 			returnVal = true;
 		}
 		return returnVal;
+	}
+	
+	public float getStartX(){
+		Vector2 position = this.getBody().getPosition();
+		return position.x-getWidth();
+	}
+	public float getStartY(){
+		Vector2 position = this.getBody().getPosition();
+		return position.y-getHeight();
+	}
+	public float getEndX(){
+		Vector2 position = this.getBody().getPosition();
+		return position.x+getWidth();
+	}
+	public float getEndY(){
+		Vector2 position = this.getBody().getPosition();
+		return position.y+getHeight();
 	}
 	
 	public float getHeight() {
