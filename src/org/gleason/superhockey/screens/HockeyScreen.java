@@ -217,30 +217,23 @@ public class HockeyScreen implements Screen, ContactListener {
 	private Boolean goingDown = false;
 
 	public void onTouch(MotionEvent ev) {
-		float x = ev.getX();
 		float y = Gdx.graphics.getHeight() - ev.getY();
-		if (ev.getAction() == ev.ACTION_DOWN) {
+		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
 			startY = y;
-		} else if (ev.getAction() == ev.ACTION_MOVE) {
+		} else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
 			float currentMotion = y - startY;
-			if (currentMotion > 0 && (goingUp == null || !goingUp)) {
-				if(!needsStoppedUp()){
+			if (currentMotion > 0 && !goingUp && !needsStoppedUp()) {
 					leftPad.getBody().setLinearVelocity(0, 10000f);
 					goingUp = true;
-				}
+					goingDown = false;
 			} else if (currentMotion == 0) {
 
-			} else if (currentMotion < 0) {
-				if (!goingDown && !needsStoppedDown()) {
+			} else if (currentMotion < 0 && !goingDown && !needsStoppedDown()) {
 					leftPad.getBody().setLinearVelocity(0, -10000f);
 					goingDown = true;
-				}
+					goingUp=false;
 			}
-		} else if (ev.getAction() == ev.ACTION_CANCEL
-				|| ev.getAction() == ev.ACTION_UP) {
-			leftPadStop();
-		}
-
+		} 
 	}
 	
 	private void leftPadStop(){
