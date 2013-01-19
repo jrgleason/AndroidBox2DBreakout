@@ -57,4 +57,18 @@ public class Puck extends GameActor {
 	public void setRadius(float radius) {
 		this.radius = radius;
 	}
+
+	@Override
+	public boolean isTouched(float x, float y) {
+		Vector2 position = getBody().getPosition();
+		// per http://cboard.cprogramming.com/game-programming/7470-point-lies-circle.html
+		float distance = (float) Math.sqrt(
+				(x - position.x) * (x - position.x) + 
+						(y - position.y) * (y - position.y));
+		boolean returnVal = false;
+		if(!(distance > getRadius())){
+			returnVal = true;
+		}
+		return returnVal;
+	}
 }

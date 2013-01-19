@@ -14,8 +14,8 @@ import org.gleason.superhockey.model.TargetBox;
 import android.view.MotionEvent;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Peripheral;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -32,59 +32,61 @@ public class HockeyScreen implements Screen, ContactListener {
 	private World world;
 	private Vector2 gravity = new Vector2(0, 0f);
 	private SpriteBatch batch;
-	
+
 	private GameActor leftPad;
 	private GameActor puck;
 	private List<GameActor> barriers = new ArrayList<GameActor>();
 	private Box2DDebugRenderer debugRenderer;
 	private OrthographicCamera camera;
 	private boolean accelerometerPresent;
-	
+
 	private static final float TIME_STEP = 1.0f / 45.0f;
 	private static final int VELOCITY_ITTERATIONS = 2;
 	private static final int POSITION_ITTERATIONS = 8;
-	
+
 	private float accelX;
-    private float accelY;
-    private float accelZ;
-	
-	public HockeyScreen(){
+	private float accelY;
+	private float accelZ;
+
+	public HockeyScreen() {
 		world = new World(getGravity(), true);
 		world.setContactListener(this);
 		setBatch(new SpriteBatch());
-		
+
 		setLeftPad(Pad.create(world, 50.0f, 200.0f));
-		setPuck(Puck.create(world, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2));
-		
-		TargetBox.create(world, Gdx.graphics.getWidth()-100, 270.0f);
-		
-		barriers.add(ArenaBarrier.create(world, 
-				(Gdx.graphics.getWidth()/2), 10, 
-				(Gdx.graphics.getWidth()/2)-10, 0));
-		barriers.add(ArenaBarrier.create(world, 
-				10, Gdx.graphics.getHeight()/2, 
-				0,(Gdx.graphics.getHeight()/2)-10));
-		barriers.add(ArenaBarrier.create(world, 
-				Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()-10, 
-				Gdx.graphics.getWidth()/2 - 10, 0));
-		barriers.add(ArenaBarrier.create(world, 
-				Gdx.graphics.getWidth()-10, Gdx.graphics.getHeight()/2, 
-				0,Gdx.graphics.getHeight()/2-10));
-		
-		setCamera(new OrthographicCamera());  
-        getCamera().viewportHeight = Gdx.graphics.getHeight();  
-        getCamera().viewportWidth = Gdx.graphics.getWidth();  
-        getCamera().position.set(getCamera().viewportWidth * .5f, getCamera().viewportHeight * .5f, 0f);  
-        getCamera().update(); 
-        setDebugRenderer(new Box2DDebugRenderer());
-        ((Puck)puck).startBody();
-        setAccelerometerPresent(Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer));
+		setPuck(Puck.create(world, Gdx.graphics.getWidth() / 2,
+				Gdx.graphics.getHeight() / 2));
+
+		TargetBox.create(world, Gdx.graphics.getWidth() - 100, 270.0f);
+
+		barriers.add(ArenaBarrier.create(world, (Gdx.graphics.getWidth() / 2),
+				10, (Gdx.graphics.getWidth() / 2) - 10, 0));
+		barriers.add(ArenaBarrier.create(world, 10,
+				Gdx.graphics.getHeight() / 2, 0,
+				(Gdx.graphics.getHeight() / 2) - 10));
+		barriers.add(ArenaBarrier.create(world, Gdx.graphics.getWidth() / 2,
+				Gdx.graphics.getHeight() - 10,
+				Gdx.graphics.getWidth() / 2 - 10, 0));
+		barriers.add(ArenaBarrier.create(world, Gdx.graphics.getWidth() - 10,
+				Gdx.graphics.getHeight() / 2, 0,
+				Gdx.graphics.getHeight() / 2 - 10));
+
+		setCamera(new OrthographicCamera());
+		getCamera().viewportHeight = Gdx.graphics.getHeight();
+		getCamera().viewportWidth = Gdx.graphics.getWidth();
+		getCamera().position.set(getCamera().viewportWidth * .5f,
+				getCamera().viewportHeight * .5f, 0f);
+		getCamera().update();
+		setDebugRenderer(new Box2DDebugRenderer());
+		((Puck) puck).startBody();
+		setAccelerometerPresent(Gdx.input
+				.isPeripheralAvailable(Peripheral.Accelerometer));
 	}
-	
-	public void refreshGravity(){
+
+	public void refreshGravity() {
 		world.setGravity(getGravity());
 	}
-	
+
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
@@ -106,31 +108,32 @@ public class HockeyScreen implements Screen, ContactListener {
 	@Override
 	public void render(float arg0) {
 		// TODO Auto-generated method stub
-		if(isAccelerometerPresent()){
+		if (isAccelerometerPresent()) {
 			float accelX = Gdx.input.getAccelerometerX();
-		    float accelY = Gdx.input.getAccelerometerY();
-		    float accelZ = Gdx.input.getAccelerometerZ();
-		    if(count != 0){
-		    	if(accelX != getAccelX()){
-		    		//X has change
-		    		setAccelX(accelX);
-		    		float rad = accelX/10;
-//		    		hero.setTilt(-rad);
-		    	}
-		    	if(accelY != this.accelY){
-		    		//y has changed
-		    		setAccelY(accelY);
-		    		float rad = accelY/10;
-//		    		hero.getBody().setTransform(hero.getBody().getPosition(), rad);
-		    		
-		    	}
-		    	if(accelZ != getAccelZ()){
-		    		//Z has changed
-		    		setAccelZ(accelZ);
-		    	}
-		    }
+			float accelY = Gdx.input.getAccelerometerY();
+			float accelZ = Gdx.input.getAccelerometerZ();
+			if (count != 0) {
+				if (accelX != getAccelX()) {
+					// X has change
+					setAccelX(accelX);
+					float rad = accelX / 10;
+					// hero.setTilt(-rad);
+				}
+				if (accelY != this.accelY) {
+					// y has changed
+					setAccelY(accelY);
+					float rad = accelY / 10;
+					// hero.getBody().setTransform(hero.getBody().getPosition(),
+					// rad);
+
+				}
+				if (accelZ != getAccelZ()) {
+					// Z has changed
+					setAccelZ(accelZ);
+				}
+			}
 		}
-		if(puck.getBody().getAngle() > -.01 && puck.getBody().getAngle() < .01){
+		if (puck.getBody().getAngle() > -.01 && puck.getBody().getAngle() < .01) {
 			puck.getBody().setTransform(puck.getBody().getPosition(), .01f);
 		}
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -165,25 +168,65 @@ public class HockeyScreen implements Screen, ContactListener {
 	@Override
 	public void endContact(Contact arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void postSolve(Contact arg0, ContactImpulse arg1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void preSolve(Contact arg0, Manifold arg1) {
 		// TODO Auto-generated method stub
-		
+
+	}
+//	private boolean isTouched = false;
+	private float startX = 0;
+	private float startY = 0;
+//	private boolean velocitySet = false;
+	private Boolean goingUp = null;
+	public void onTouch(MotionEvent ev) {
+		float x = ev.getX();
+	    float y = Gdx.graphics.getHeight() - ev.getY();
+	    if(ev.getAction() == ev.ACTION_DOWN){
+//	    	isTouched = leftPad.isTouched(x, y);
+//		    if(isTouched){
+		    	//TODO: Move the pad
+		    	startX=x;
+		    	startY=y;
+//		    }
+	    }
+	    else if(ev.getAction() == ev.ACTION_MOVE){
+	    	//TODO: we are moving, but which direction?
+//	    	if(!velocitySet){
+	    		float currentMotion = y-startY;
+	    		if(currentMotion > 0 && (goingUp==null || !goingUp)){
+	    			leftPad.getBody().setLinearVelocity(0, 10000f);
+	    			goingUp=true;
+//	    			velocitySet = true;
+	    		}
+	    		else{
+	    			if(goingUp){
+	    				leftPad.getBody().setLinearVelocity(0, -10000f);
+	    				goingUp=false;
+	    			}
+//	    			velocitySet = true;
+	    		}
+//	    	}
+	    }
+	    else if(ev.getAction() == ev.ACTION_CANCEL || ev.getAction() == ev.ACTION_UP){
+//	    	isTouched = false;
+	    	startX = 0;
+	    	startY=0;
+	    	leftPad.getBody().setLinearVelocity(0, 0f);
+	    	goingUp = false;
+//	    	velocitySet = false;
+	    }
+	    
 	}
 
-	public void onTouch(MotionEvent ev){
-		
-	}
-	
 	/**
 	 * @return the count
 	 */
@@ -192,7 +235,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	/**
-	 * @param count the count to set
+	 * @param count
+	 *            the count to set
 	 */
 	public void setCount(int count) {
 		this.count = count;
@@ -206,7 +250,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	/**
-	 * @param world the world to set
+	 * @param world
+	 *            the world to set
 	 */
 	public void setWorld(World world) {
 		this.world = world;
@@ -220,7 +265,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	/**
-	 * @param gravity the gravity to set
+	 * @param gravity
+	 *            the gravity to set
 	 */
 	public void setGravity(Vector2 gravity) {
 		this.gravity = gravity;
@@ -234,7 +280,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	/**
-	 * @param batch the batch to set
+	 * @param batch
+	 *            the batch to set
 	 */
 	public void setBatch(SpriteBatch batch) {
 		this.batch = batch;
@@ -264,7 +311,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	/**
-	 * @param camera the camera to set
+	 * @param camera
+	 *            the camera to set
 	 */
 	public void setCamera(OrthographicCamera camera) {
 		this.camera = camera;
@@ -286,7 +334,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	/**
-	 * @param accelX the accelX to set
+	 * @param accelX
+	 *            the accelX to set
 	 */
 	public void setAccelX(float accelX) {
 		this.accelX = accelX;
@@ -300,7 +349,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	/**
-	 * @param accelY the accelY to set
+	 * @param accelY
+	 *            the accelY to set
 	 */
 	public void setAccelY(float accelY) {
 		this.accelY = accelY;
@@ -314,7 +364,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	/**
-	 * @param accelZ the accelZ to set
+	 * @param accelZ
+	 *            the accelZ to set
 	 */
 	public void setAccelZ(float accelZ) {
 		this.accelZ = accelZ;
@@ -328,7 +379,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	/**
-	 * @param puck the puck to set
+	 * @param puck
+	 *            the puck to set
 	 */
 	public void setPuck(GameActor puck) {
 		this.puck = puck;

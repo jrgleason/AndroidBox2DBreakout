@@ -45,6 +45,9 @@ public abstract class GameActor {
 	public void relocate(float x, float y, float angle){
 		getBody().setTransform(new Vector2(x, y), angle);
 	}
+	
+	public abstract boolean isTouched(float x, float y);
+	
 	/**
 	 * Getters/Setters
 	 */

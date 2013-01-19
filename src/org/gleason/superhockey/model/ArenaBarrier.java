@@ -67,4 +67,10 @@ public class ArenaBarrier extends GameActor {
 		this.halfY = halfY;
 	}
 
+	@Override
+	public boolean isTouched(float x, float y) {
+		// TODO Handle this better later for now we don't care if we touch a wall
+		return false;
+	}
+
 }

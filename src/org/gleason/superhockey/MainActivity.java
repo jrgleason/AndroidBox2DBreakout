@@ -15,6 +15,8 @@ public class MainActivity extends AndroidApplication {
 		System.loadLibrary("gdx");
 	}
 	
+	private SuperHockeyGame game;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,7 +25,8 @@ public class MainActivity extends AndroidApplication {
 		config.useCompass = false;
 		config.useWakelock = true;
 		config.useGL20 = true;
-		initialize(new SuperHockeyGame(), config);
+		game = new SuperHockeyGame();
+		initialize(game, config);
 	}
 
 	@Override
@@ -35,8 +38,7 @@ public class MainActivity extends AndroidApplication {
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		// TODO Auto-generated method stub
-		int x = (int)ev.getX();
-	    int y = (int)ev.getY();
+		game.onTouch(ev);
 		return super.dispatchTouchEvent(ev);
 	}
 }
