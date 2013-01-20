@@ -23,6 +23,7 @@ public class Puck extends GameActor {
 		fd.shape = getShape();
 		fd.density = 20f;
 		fd.restitution = 1.0f;
+		fd.friction = 0f;
 		return getBody().createFixture(fd);
 	}
 

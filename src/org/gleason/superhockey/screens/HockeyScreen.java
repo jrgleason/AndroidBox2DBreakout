@@ -19,6 +19,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -35,6 +36,7 @@ public class HockeyScreen implements Screen, ContactListener {
 
 	private GameActor leftPad;
 	private GameActor puck;
+	private GameActor targetBox;
 	private List<GameActor> barriers = new ArrayList<GameActor>();
 	private Box2DDebugRenderer debugRenderer;
 	private OrthographicCamera camera;
@@ -50,6 +52,8 @@ public class HockeyScreen implements Screen, ContactListener {
 	
 	private float topValue;
 	private float bottomValue;
+	private float rightValue;
+	private float leftValue;
 	private static final float BORDER_VAL=10;
 
 	
@@ -58,14 +62,18 @@ public class HockeyScreen implements Screen, ContactListener {
 		world.setContactListener(this);
 		setBatch(new SpriteBatch());
 
-		setLeftPad(Pad.create(world, 50.0f, 200.0f));
+		setLeftPad(Pad.create(world, 50.0f, 30.0f));
 		setPuck(Puck.create(world, Gdx.graphics.getWidth() / 2,
 				Gdx.graphics.getHeight() / 2));
 
-		TargetBox.create(world, Gdx.graphics.getWidth() - 100, 270.0f);
-
 		topValue = Gdx.graphics.getHeight()-BORDER_VAL;
 		bottomValue = BORDER_VAL;
+		rightValue = Gdx.graphics.getWidth()-BORDER_VAL;
+		leftValue = BORDER_VAL;
+		
+		targetBox = TargetBox.create(world, rightValue/2 , topValue - 30);
+
+		
 		
 		barriers.add(ArenaBarrier.create(world, (Gdx.graphics.getWidth() / 2),
 				10, (Gdx.graphics.getWidth() / 2) - BORDER_VAL, 0));
@@ -150,6 +158,12 @@ public class HockeyScreen implements Screen, ContactListener {
 		if(needsStoppedDown() && goingDown){
 			leftPadStop();
 		}
+		if(needsStoppedRight() && goingRight){
+			leftPadStop();
+		}
+		if(needsStoppedLeft() && goingLeft){
+			leftPadStop();
+		}
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		getDebugRenderer().render(world, camera.combined);
 		world.step(TIME_STEP, VELOCITY_ITTERATIONS, POSITION_ITTERATIONS);
@@ -165,6 +179,21 @@ public class HockeyScreen implements Screen, ContactListener {
 	private boolean needsStoppedDown(){
 		Pad pad = (Pad)leftPad;
 		if(pad.getStartY()<bottomValue){
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean needsStoppedRight(){
+		Pad pad = (Pad)leftPad;
+		if(pad.getEndX()>rightValue){
+			return true;
+		}
+		return false;
+	}
+	private boolean needsStoppedLeft(){
+		Pad pad = (Pad)leftPad;
+		if(pad.getStartX()<leftValue){
 			return true;
 		}
 		return false;
@@ -189,9 +218,16 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	@Override
-	public void beginContact(Contact arg0) {
+	public void beginContact(Contact contact) {
 		// TODO Auto-generated method stub
 		String test = "test";
+		Body bodyA = contact.getFixtureA().getBody();
+		Body bodyB = contact.getFixtureB().getBody();
+		Body leftPadBody = leftPad.getBody();
+		Body targetBoxBody = targetBox.getBody();
+		if(bodyA.equals(targetBoxBody)||bodyB.equals(targetBoxBody)){
+			test = "we got a hit!";
+		}
 	}
 
 	@Override
@@ -212,11 +248,41 @@ public class HockeyScreen implements Screen, ContactListener {
 
 	}
 
+
+	public void onTouch(MotionEvent ev) {
+		moveHorizantal(ev);
+	}
+	
+	private float startX = 0;
+	private Boolean goingLeft = false;
+	private Boolean goingRight = false;
+
+	
+	private void moveHorizantal(MotionEvent ev){
+		float x = Gdx.graphics.getWidth() - ev.getX();
+		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+			startX = x;
+		} else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+			float currentMotion = x - startX;
+			if (currentMotion < 0 && !goingRight && !needsStoppedRight()) {
+					leftPad.getBody().setLinearVelocity(10000f,0);
+					goingRight = true;
+					goingLeft = false;
+			} else if (currentMotion == 0) {
+				
+			} else if (currentMotion > 0 && !goingDown && !needsStoppedLeft()) {
+					leftPad.getBody().setLinearVelocity(-10000f,0);
+					goingLeft = true;
+					goingRight=false;
+			}
+		} 
+	}
+
 	private float startY = 0;
 	private Boolean goingUp = false;
 	private Boolean goingDown = false;
-
-	public void onTouch(MotionEvent ev) {
+	
+	private void moveVerticle(MotionEvent ev){
 		float y = Gdx.graphics.getHeight() - ev.getY();
 		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
 			startY = y;
@@ -227,7 +293,7 @@ public class HockeyScreen implements Screen, ContactListener {
 					goingUp = true;
 					goingDown = false;
 			} else if (currentMotion == 0) {
-
+				
 			} else if (currentMotion < 0 && !goingDown && !needsStoppedDown()) {
 					leftPad.getBody().setLinearVelocity(0, -10000f);
 					goingDown = true;

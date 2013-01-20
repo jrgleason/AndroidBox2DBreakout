@@ -7,8 +7,8 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Pad extends BoxActor {
 	public Pad(){
 		super();
-		setHeight(40);
-		setWidth(10);
+		setHeight(10);
+		setWidth(40);
 		resize();
 	}
 	public static Pad create(World world, float x,float y){
