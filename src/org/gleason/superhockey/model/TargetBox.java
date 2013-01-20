@@ -5,10 +5,16 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class TargetBox extends BoxActor {
-	public TargetBox(){
+	public static final float HEIGHT = 50;
+	public static final float WIDTH = 50;
+	private World world;
+	private boolean dead;
+	
+	public TargetBox(World world){
 		super();
-		setHeight(20);
-		setWidth(20);
+		this.world = world;
+		setHeight(HEIGHT);
+		setWidth(WIDTH);
 		resize();
 	}
 	public static GameActor create(World world, float x,float y){
@@ -16,9 +22,20 @@ public class TargetBox extends BoxActor {
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(x, y);
 		bodyDef.angle = 0;
-		GameActor returnVal = new TargetBox();
+		GameActor returnVal = new TargetBox(world);
 		returnVal.setBody(world.createBody(bodyDef));
 		returnVal.createFixture();
 		return returnVal;
+	}
+	public boolean isDead(){
+		return dead;
+	}
+	public void setDead(boolean dead){
+		this.dead = dead;
+	}
+	public void killed(){
+		if(getBody() != null){
+			world.destroyBody(getBody());
+		}
 	}
 }
