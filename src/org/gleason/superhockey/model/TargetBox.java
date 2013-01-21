@@ -35,7 +35,18 @@ public class TargetBox extends BoxActor {
 	}
 	public void killed(){
 		if(getBody() != null){
-			world.destroyBody(getBody());
+			try{
+				world.destroyBody(getBody());
+			}
+			catch(Exception e){
+				String test = "sdasdsa";
+			}
+			
 		}
+	}
+	@Override
+	public long getScoreValue() {
+		// TODO Auto-generated method stub
+		return 100;
 	}
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 public abstract class GameActor {
 	private Shape shape;
 	private Body body;
+	private boolean dead;
 	
 	private Vector2 gravity = new Vector2(0f, 0f);;
 	
@@ -17,6 +18,7 @@ public abstract class GameActor {
 		resize();
 	}
 	public abstract void resize();
+	public abstract long getScoreValue();
 	public Fixture createFixture(){
 		FixtureDef fd = new FixtureDef();
 		fd.shape = getShape();
@@ -88,5 +90,11 @@ public abstract class GameActor {
 	 */
 	public void setGravity(Vector2 gravity) {
 		this.gravity = gravity;
+	}
+	public boolean isDead(){
+		return dead;
+	}
+	public void setDead(boolean dead){
+		this.dead = dead;
 	}
 }

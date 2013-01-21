@@ -48,7 +48,7 @@ public class Puck extends GameActor {
 	
 	public void startBody(){
 		if(getBody() != null){
-			getBody().setLinearVelocity(new Vector2(-100000000.0f, -100000000.0f));
+			getBody().setLinearVelocity(new Vector2(-10000000000000000000.0f, -10000000000000000000.0f));
 		}
 	}
 	
@@ -71,5 +71,11 @@ public class Puck extends GameActor {
 			returnVal = true;
 		}
 		return returnVal;
+	}
+
+	@Override
+	public long getScoreValue() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

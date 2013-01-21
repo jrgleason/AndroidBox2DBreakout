@@ -61,4 +61,8 @@ public class BoxActor extends GameActor {
 	public void setWidth(float width) {
 		this.width = width;
 	}
+	public long getScoreValue() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

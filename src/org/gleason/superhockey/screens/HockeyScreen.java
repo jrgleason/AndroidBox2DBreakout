@@ -1,6 +1,7 @@
 package org.gleason.superhockey.screens;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -9,6 +10,7 @@ import org.gleason.superhockey.model.ArenaBarrier;
 import org.gleason.superhockey.model.GameActor;
 import org.gleason.superhockey.model.Pad;
 import org.gleason.superhockey.model.Puck;
+import org.gleason.superhockey.model.ScoreBoard;
 import org.gleason.superhockey.model.TargetBox;
 import org.gleason.superhockey.util.PerlinNoiseGenerator;
 
@@ -41,6 +43,7 @@ public class HockeyScreen implements Screen, ContactListener {
 	private GameActor puck;
 	private List<GameActor> targetBoxes = new ArrayList<GameActor>();
 	private List<GameActor> barriers = new ArrayList<GameActor>();
+	private List<GameActor> deadActors = new ArrayList<GameActor>();
 	private Box2DDebugRenderer debugRenderer;
 	private OrthographicCamera camera;
 	private boolean accelerometerPresent;
@@ -57,13 +60,15 @@ public class HockeyScreen implements Screen, ContactListener {
 	private float bottomValue;
 	private float rightValue;
 	private float leftValue;
+	private ScoreBoard scoreBoard;
 	private static final float BORDER_VAL = 10;
+	private Boolean worldLock = false;
 
 	public HockeyScreen() {
 		world = new World(getGravity(), true);
 		world.setContactListener(this);
 		setBatch(new SpriteBatch());
-
+		scoreBoard = new ScoreBoard();
 		setLeftPad(Pad.create(world, 50.0f, 30.0f));
 		setPuck(Puck.create(world, Gdx.graphics.getWidth() / 2,
 				Gdx.graphics.getHeight() / 2));
@@ -101,39 +106,14 @@ public class HockeyScreen implements Screen, ContactListener {
 
 	private void genBoxMap() {
 		for (float y = (topValue / 2 + 200); y < (topValue - 100); y = y
-				+ TargetBox.HEIGHT) {
+				+ TargetBox.HEIGHT*2) {
 			for (float x = BORDER_VAL + (TargetBox.WIDTH * 2); x < rightValue
-					- (TargetBox.WIDTH * 2); x = x + TargetBox.WIDTH) {
+					- (TargetBox.WIDTH * 2); x = x + (TargetBox.WIDTH*2)) {
 				targetBoxes.add(TargetBox.create(world, x, y));
 			}
 		}
 
 	}
-
-	// private void genBoxMap() {
-	// float xoff = 0.0f;
-	// int currBoxCount = 0;
-	// while (currBoxCount < boxCount) {
-	// for (int x = 10; x < rightValue; x++) {
-	// float yoff = 0.0f;
-	// for (int y = Math.round(topValue / 2); y < topValue; y++) {
-	// if(currBoxCount >= boxCount){
-	// continue;
-	// }
-	// double val = PerlinNoiseGenerator.noise(xoff, yoff,
-	// increment);
-	// if (val > 0.07) {
-	// targetBoxes.add(TargetBox.create(world, x, y));
-	// currBoxCount += 1;
-	// }
-	// yoff += 0.01;
-	// }
-	// xoff += 0.01;
-	// }
-	// increment += .09;
-	// }
-	//
-	// }
 
 	public void refreshGravity() {
 		world.setGravity(getGravity());
@@ -202,16 +182,13 @@ public class HockeyScreen implements Screen, ContactListener {
 		}
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		getDebugRenderer().render(world, camera.combined);
-		// TODO: this seems wrong but it thanks to a Concurrent exception need
-		// to look over locking stradegies.
-		for (GameActor targetBox : targetBoxes) {
-			TargetBox tb = (TargetBox) targetBox;
-			synchronized (tb) {
-				if (tb.isDead()) {
-					tb.killed();
-					tb.setBody(null);
-				}
-			}
+		Iterator<GameActor> i = deadActors.iterator();
+		while (i.hasNext()) {
+		   GameActor walkingDead = i.next();
+		   world.destroyBody(walkingDead.getBody());
+	       walkingDead.setDead(true);
+	       walkingDead.setBody(null);
+		   i.remove();
 		}
 		world.step(TIME_STEP, VELOCITY_ITTERATIONS, POSITION_ITTERATIONS);
 	}
@@ -276,18 +253,18 @@ public class HockeyScreen implements Screen, ContactListener {
 		// TODO Auto-generated method stub
 		Body bodyA = contact.getFixtureA().getBody();
 		Body bodyB = contact.getFixtureB().getBody();
-		for (GameActor targetBox : targetBoxes) {
-			TargetBox tb = (TargetBox) targetBox;
-			synchronized (tb) {
+			for (GameActor targetBox : targetBoxes) {
+				TargetBox tb = (TargetBox) targetBox;
+
 				Body targetBoxBody = tb.getBody();
 				if (targetBoxBody != null
 						&& (bodyA.equals(targetBoxBody) || bodyB
 								.equals(targetBoxBody))) {
 
-					tb.setDead(true);
+					deadActors.add(tb);					
+					scoreBoard.addPoints(tb.getScoreValue());
 				}
 			}
-		}
 	}
 
 	@Override
@@ -321,6 +298,9 @@ public class HockeyScreen implements Screen, ContactListener {
 				goingRight = true;
 				goingLeft = false;
 			} else if (currentMotion == 0) {
+				if(leftPad.getBody().getPosition().x >= x){
+					leftPadStop();
+				}
 
 			} else if (currentMotion > 0 && !goingDown && !needsStoppedLeft()) {
 				leftPad.getBody().setLinearVelocity(-10000f, 0);
