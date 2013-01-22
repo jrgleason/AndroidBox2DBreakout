@@ -1,5 +1,7 @@
 package org.gleason.superhockey.model;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -11,6 +13,7 @@ public abstract class GameActor {
 	private Shape shape;
 	private Body body;
 	private boolean dead;
+	private Sprite sprite;
 	
 	private Vector2 gravity = new Vector2(0f, 0f);;
 	
@@ -19,6 +22,7 @@ public abstract class GameActor {
 	}
 	public abstract void resize();
 	public abstract long getScoreValue();
+	public abstract void drawSprite(SpriteBatch batch);
 	public Fixture createFixture(){
 		FixtureDef fd = new FixtureDef();
 		fd.shape = getShape();
@@ -96,5 +100,17 @@ public abstract class GameActor {
 	}
 	public void setDead(boolean dead){
 		this.dead = dead;
+	}
+	/**
+	 * @return the sprite
+	 */
+	public Sprite getSprite() {
+		return sprite;
+	}
+	/**
+	 * @param sprite the sprite to set
+	 */
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
 	}
 }

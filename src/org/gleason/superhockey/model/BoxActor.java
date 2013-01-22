@@ -1,9 +1,14 @@
 package org.gleason.superhockey.model;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-public class BoxActor extends GameActor {
+public abstract class BoxActor extends GameActor {
 	private float height;
 	private float width;
 	
@@ -12,6 +17,27 @@ public class BoxActor extends GameActor {
 		setHeight(20);
 		setWidth(20);
 		resize();
+	}
+	
+	public static void addSprite(BoxActor box){
+		Texture mTexture = new Texture(box.getImage());
+		Sprite mSprite = new Sprite(mTexture);
+		mSprite.setPosition(box.getStartX(), box.getStartY());
+		box.setSprite(mSprite);
+	}
+	
+	public static void addSprite(BoxActor box, int x, int y){
+		Texture mTexture = new Texture(box.getImage());
+		Sprite mSprite = new Sprite(mTexture, x, y);
+		mSprite.setPosition(box.getStartX(), box.getStartY());
+		box.setSprite(mSprite);
+	}
+	
+	public abstract FileHandle getImage();
+	
+	public void drawSprite(SpriteBatch batch){
+		getSprite().setPosition(getStartX(), getStartY());
+		getSprite().draw(batch);
 	}
 	
 	@Override

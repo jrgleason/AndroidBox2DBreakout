@@ -1,5 +1,6 @@
 package org.gleason.superhockey.model;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
@@ -77,6 +78,12 @@ public class ArenaBarrier extends GameActor {
 	public long getScoreValue() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void drawSprite(SpriteBatch batch) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

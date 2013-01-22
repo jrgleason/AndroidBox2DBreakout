@@ -1,12 +1,17 @@
 package org.gleason.superhockey.model;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class TargetBox extends BoxActor {
-	public static final float HEIGHT = 50;
-	public static final float WIDTH = 50;
+	public static final float HEIGHT = 25;
+	public static final float WIDTH = 25;
 	private World world;
 	private boolean dead;
 	
@@ -22,9 +27,10 @@ public class TargetBox extends BoxActor {
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(x, y);
 		bodyDef.angle = 0;
-		GameActor returnVal = new TargetBox(world);
+		TargetBox returnVal = new TargetBox(world);
 		returnVal.setBody(world.createBody(bodyDef));
 		returnVal.createFixture();
+		addSprite(returnVal);
 		return returnVal;
 	}
 	public boolean isDead(){
@@ -49,4 +55,11 @@ public class TargetBox extends BoxActor {
 		// TODO Auto-generated method stub
 		return 100;
 	}
+	@Override
+	public FileHandle getImage() {
+		// TODO Auto-generated method stub
+		return Gdx.files.internal("WolverineBlock.png");
+	}
+	
+	
 }

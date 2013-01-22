@@ -1,5 +1,11 @@
 package org.gleason.superhockey.model;
 
+import java.sql.BatchUpdateException;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -10,11 +16,20 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class Puck extends GameActor {
 	private float radius;
+	private static final float ACCELERATOR_TIME = 10;
+	private float currentTime=0;
 	
 	public Puck(){
 		super();
 		setRadius(10.0f);
 		resize();
+	}
+	
+	public void accelerate(){
+		if(currentTime<ACCELERATOR_TIME){
+			startBody();
+			currentTime++;
+		}
 	}
 	
 	@Override
@@ -43,12 +58,13 @@ public class Puck extends GameActor {
 		Puck returnVal = new Puck();
 		returnVal.setBody(world.createBody(bodyDef));
 		returnVal.createFixture();
+		addSprite(returnVal);
 		return returnVal;
 	}
 	
 	public void startBody(){
 		if(getBody() != null){
-			getBody().setLinearVelocity(new Vector2(-10000000000000000000.0f, -10000000000000000000.0f));
+			getBody().setLinearVelocity(new Vector2(-100000.0f, -100000.0f));
 		}
 	}
 	
@@ -77,5 +93,25 @@ public class Puck extends GameActor {
 	public long getScoreValue() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	public float getSpriteXLocation(){
+		//Adding correction factor
+		return getBody().getPosition().x - (radius+2);
+	}
+	public float getSpriteYLocation(){
+		return getBody().getPosition().y - (radius+1);
+	}
+	
+	public void drawSprite(SpriteBatch batch){
+		getSprite().setPosition(getSpriteXLocation(), getSpriteYLocation());
+		getSprite().draw(batch);
+	}
+	
+	private static void addSprite(Puck puck){
+		Texture mTexture = new Texture(Gdx.files.internal("BuckeyeBall.png"));
+		Sprite mSprite = new Sprite(mTexture);
+		mSprite.setPosition(puck.getSpriteXLocation(), puck.getSpriteYLocation());
+		puck.setSprite(mSprite);
 	}
 }
