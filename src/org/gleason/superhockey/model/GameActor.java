@@ -113,4 +113,13 @@ public abstract class GameActor {
 	public void setSprite(Sprite sprite) {
 		this.sprite = sprite;
 	}
+	
+	private static final float PIXELS_PER_METER = 50.0f;
+	public static float convertPixelsToMeters(float pixels){
+		return pixels/PIXELS_PER_METER;
+	}
+	public static float convertMetersToPixels(float meters){
+		float returnValue = meters * PIXELS_PER_METER;
+		return returnValue;
+	}
 }

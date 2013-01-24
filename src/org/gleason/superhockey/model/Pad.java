@@ -12,11 +12,11 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Pad extends BoxActor {
 	public Pad(){
 		super();
-		setHeight(10);
-		setWidth(40);
+		setHeight(10, false);
+		setWidth(40, false);
 		resize();
 	}
-	public static Pad create(World world, float x,float y){
+	public static Pad createNew(World world, float x,float y){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.KinematicBody;
 		bodyDef.position.set(x, y);
@@ -26,6 +26,14 @@ public class Pad extends BoxActor {
 		returnVal.createFixture();
 		addSprite(returnVal);
 		return returnVal;
+	}
+	public static Pad create(World world, float x,float y, boolean isMeters){
+		if(isMeters){
+			return createNew(world, x, y);
+		}
+		else{
+			return createNew(world, convertPixelsToMeters(x), convertPixelsToMeters(y));
+		}
 	}
 	@Override
 	public FileHandle getImage() {

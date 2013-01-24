@@ -10,33 +10,44 @@ import com.badlogic.gdx.physics.box2d.World;
 public class ArenaBarrier extends GameActor {
 
 	private float halfX, halfY;
-	
-	public ArenaBarrier(float halfX, float halfY){
+
+	public ArenaBarrier(float halfX, float halfY) {
 		super();
 		setHalfX(halfX);
 		setHalfY(halfY);
 		resize();
 	}
-	
-	public static GameActor create(World world, 
-			float x, float y, 
-			float halfX, float halfY){
+
+	public static GameActor createNew(World world, float x, float y,
+			float halfX, float halfY) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(x, y);
 		bodyDef.angle = 0;
-		ArenaBarrier floor = new ArenaBarrier(halfX,halfY);
+		ArenaBarrier floor = new ArenaBarrier(halfX, halfY);
 		floor.setBody(world.createBody(bodyDef));
 		floor.createFixture();
 		return floor;
 	}
-	
+
+	public static GameActor create(World world, float x, float y, float halfX,
+			float halfY, boolean isMeters) {
+		if (isMeters) {
+			return createNew(world, x, y, halfX, halfY);
+		} else {
+			x =  convertPixelsToMeters(x);
+			y = convertPixelsToMeters(y);
+			halfX = convertPixelsToMeters(halfX);
+			halfY = convertPixelsToMeters(halfY);
+			return createNew(world, x, y, halfX, halfY);
+		}
+	}
+
 	@Override
 	public void resize() {
 		// TODO Auto-generated method stub
 		setShape(new EdgeShape());
-		((EdgeShape)getShape()).set(
-				new Vector2(-getHalfX(), -getHalfY()), 
+		((EdgeShape) getShape()).set(new Vector2(-getHalfX(), -getHalfY()),
 				new Vector2(getHalfX(), getHalfY()));
 	}
 
@@ -48,7 +59,8 @@ public class ArenaBarrier extends GameActor {
 	}
 
 	/**
-	 * @param halfX the halfX to set
+	 * @param halfX
+	 *            the halfX to set
 	 */
 	public void setHalfX(float halfX) {
 		this.halfX = halfX;
@@ -62,7 +74,8 @@ public class ArenaBarrier extends GameActor {
 	}
 
 	/**
-	 * @param halfY the halfY to set
+	 * @param halfY
+	 *            the halfY to set
 	 */
 	public void setHalfY(float halfY) {
 		this.halfY = halfY;
@@ -70,7 +83,8 @@ public class ArenaBarrier extends GameActor {
 
 	@Override
 	public boolean isTouched(float x, float y) {
-		// TODO Handle this better later for now we don't care if we touch a wall
+		// TODO Handle this better later for now we don't care if we touch a
+		// wall
 		return false;
 	}
 
@@ -83,7 +97,7 @@ public class ArenaBarrier extends GameActor {
 	@Override
 	public void drawSprite(SpriteBatch batch) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

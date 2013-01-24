@@ -1,6 +1,5 @@
 package org.gleason.superhockey.model;
 
-import java.sql.BatchUpdateException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,7 +20,7 @@ public class Puck extends GameActor {
 	
 	public Puck(){
 		super();
-		setRadius(10.0f);
+		setRadius(convertPixelsToMeters(10.0f));
 		resize();
 	}
 	
@@ -36,9 +35,9 @@ public class Puck extends GameActor {
 	public Fixture createFixture(){
 		FixtureDef fd = new FixtureDef();
 		fd.shape = getShape();
-		fd.density = 20f;
+		fd.density = 1f;
 		fd.restitution = 1.0f;
-		fd.friction = 0f;
+		fd.friction = 0.0f;
 		return getBody().createFixture(fd);
 	}
 
@@ -50,7 +49,7 @@ public class Puck extends GameActor {
 		setShape(shape);
 	}
 	
-	public static Puck create(World world, float x,float y){
+	public static Puck createNew(World world, float x,float y){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(x, y);
@@ -62,9 +61,18 @@ public class Puck extends GameActor {
 		return returnVal;
 	}
 	
+	public static Puck create(World world, float x,float y, boolean inMeters){
+		if(inMeters){
+			return createNew(world, x, y);
+		}
+		else{
+			return createNew(world, convertPixelsToMeters(x), convertPixelsToMeters(y));
+		}
+	}
+	
 	public void startBody(){
 		if(getBody() != null){
-			getBody().setLinearVelocity(new Vector2(-100000.0f, -100000.0f));
+			getBody().applyForceToCenter(-10.0f, -10.0f);
 		}
 	}
 	
@@ -97,10 +105,10 @@ public class Puck extends GameActor {
 	
 	public float getSpriteXLocation(){
 		//Adding correction factor
-		return getBody().getPosition().x - (radius+2);
+		return convertMetersToPixels(getBody().getPosition().x - (radius));
 	}
 	public float getSpriteYLocation(){
-		return getBody().getPosition().y - (radius+1);
+		return convertMetersToPixels(getBody().getPosition().y - (radius));
 	}
 	
 	public void drawSprite(SpriteBatch batch){

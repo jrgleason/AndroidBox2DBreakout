@@ -18,11 +18,11 @@ public class TargetBox extends BoxActor {
 	public TargetBox(World world){
 		super();
 		this.world = world;
-		setHeight(HEIGHT);
-		setWidth(WIDTH);
+		setHeight(HEIGHT, false);
+		setWidth(WIDTH, false);
 		resize();
 	}
-	public static GameActor create(World world, float x,float y){
+	public static GameActor createNew(World world, float x,float y){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(x, y);
@@ -32,6 +32,14 @@ public class TargetBox extends BoxActor {
 		returnVal.createFixture();
 		addSprite(returnVal);
 		return returnVal;
+	}
+	public static GameActor create(World world, float x,float y, boolean isMeters){
+		if(isMeters){
+			return createNew(world, x, y);
+		}
+		else{
+			return createNew(world, convertPixelsToMeters(x), convertPixelsToMeters(y));
+		}
 	}
 	public boolean isDead(){
 		return dead;

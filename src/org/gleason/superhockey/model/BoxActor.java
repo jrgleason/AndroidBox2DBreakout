@@ -1,6 +1,5 @@
 package org.gleason.superhockey.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,8 +13,8 @@ public abstract class BoxActor extends GameActor {
 	
 	public BoxActor(){
 		super();
-		setHeight(20);
-		setWidth(20);
+		setHeight(20, false);
+		setWidth(20, false);
 		resize();
 	}
 	
@@ -36,6 +35,8 @@ public abstract class BoxActor extends GameActor {
 	public abstract FileHandle getImage();
 	
 	public void drawSprite(SpriteBatch batch){
+		float x = getStartX();
+		float y = getStartY();
 		getSprite().setPosition(getStartX(), getStartY());
 		getSprite().draw(batch);
 	}
@@ -49,28 +50,46 @@ public abstract class BoxActor extends GameActor {
 	}
 	
 	public boolean isTouched(float x, float y){
-		
-		
 		boolean returnVal = false;
 		if(x<=getEndX() && x >= getStartX() && y>=getStartY() && y <= getEndY()){
 			returnVal = true;
 		}
 		return returnVal;
 	}
-	
+	/**
+	 * Returns Pixels for openGL
+	 * @return
+	 */
 	public float getStartX(){
 		Vector2 position = this.getBody().getPosition();
-		return position.x-getWidth();
+		return convertMetersToPixels(position.x-getWidth());
 	}
 	public float getStartY(){
 		Vector2 position = this.getBody().getPosition();
-		return position.y-getHeight();
+		return convertMetersToPixels(position.y-getHeight());
 	}
 	public float getEndX(){
 		Vector2 position = this.getBody().getPosition();
-		return position.x+getWidth();
+		return convertMetersToPixels(position.x)+convertMetersToPixels(getWidth());
 	}
 	public float getEndY(){
+		Vector2 position = this.getBody().getPosition();
+		return convertMetersToPixels(position.y+getHeight());
+	}
+	
+	public float getStartXMeters(){
+		Vector2 position = this.getBody().getPosition();
+		return position.x-getWidth();
+	}
+	public float getStartYMeters(){
+		Vector2 position = this.getBody().getPosition();
+		return position.y-getHeight();
+	}
+	public float getEndXMeters(){
+		Vector2 position = this.getBody().getPosition();
+		return position.x + getWidth();
+	}
+	public float getEndYMeters(){
 		Vector2 position = this.getBody().getPosition();
 		return position.y+getHeight();
 	}
@@ -81,14 +100,38 @@ public abstract class BoxActor extends GameActor {
 	public void setHeight(float height) {
 		this.height = height;
 	}
+	public float getHeightAsPixel(){
+		return convertMetersToPixels(getHeight());
+	}
+	public void setHeight(float height, boolean inMeters) {
+		if(inMeters){
+			setHeight(height);
+		}
+		else{
+			setHeight(convertPixelsToMeters(height));
+		}
+	}
 	public float getWidth() {
 		return width;
 	}
+	public float getWidthAsPixel(){
+		return convertMetersToPixels(getWidth());
+	}
 	public void setWidth(float width) {
 		this.width = width;
+	}
+	public void setWidth(float width, boolean inMeters) {
+		if(inMeters){
+			setWidth(width);
+		}
+		else{
+			setWidth(convertPixelsToMeters(width));
+		}
 	}
 	public long getScoreValue() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	
 }
