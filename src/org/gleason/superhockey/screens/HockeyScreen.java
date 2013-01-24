@@ -206,8 +206,7 @@ public class HockeyScreen implements Screen, ContactListener {
 	private boolean needsStoppedRight() {
 		Pad pad = (Pad) leftPad;
 		float point1 = pad.getEndX();
-		float point2 = GameActor.convertPixelsToMeters(rightValue);
-		if (pad.getEndX() > GameActor.convertPixelsToMeters(rightValue)) {
+		if (pad.getEndX() > rightValue) {
 			return true;
 		}
 		return false;
@@ -215,7 +214,7 @@ public class HockeyScreen implements Screen, ContactListener {
 
 	private boolean needsStoppedLeft() {
 		Pad pad = (Pad) leftPad;
-		if (pad.getStartX() < GameActor.convertPixelsToMeters(leftValue)) {
+		if (pad.getStartX() < leftValue) {
 			return true;
 		}
 		return false;
