@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class Puck extends GameActor {
 	private float radius;
-	private static final float ACCELERATOR_TIME = 10;
+	private static final float ACCELERATOR_TIME = 1;
 	private float currentTime=0;
 	
 	public Puck(){
@@ -72,7 +72,7 @@ public class Puck extends GameActor {
 	
 	public void startBody(){
 		if(getBody() != null){
-			getBody().applyForceToCenter(-10.0f, -10.0f);
+			getBody().applyForceToCenter(-5.0f, -5.0f);
 		}
 	}
 	
