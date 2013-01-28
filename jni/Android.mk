@@ -20,3 +20,8 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libgdx
 LOCAL_SRC_FILES := libgdx.so
 include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := libgdx-freetype
+LOCAL_SRC_FILES := libgdx-freetype.so
+include $(PREBUILT_SHARED_LIBRARY)

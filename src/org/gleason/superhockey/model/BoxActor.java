@@ -35,10 +35,13 @@ public abstract class BoxActor extends GameActor {
 	public abstract FileHandle getImage();
 	
 	public void drawSprite(SpriteBatch batch){
-		float x = getStartX();
-		float y = getStartY();
 		getSprite().setPosition(getStartX(), getStartY());
-		getSprite().draw(batch);
+		if(this.isDead()){
+			getSprite().draw(batch, .5f);
+		}
+		else{
+			getSprite().draw(batch);
+		}
 	}
 	
 	@Override

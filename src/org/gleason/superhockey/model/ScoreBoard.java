@@ -2,18 +2,18 @@ package org.gleason.superhockey.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-//import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class ScoreBoard {
 	private long score = 0;
 	private BitmapFont font;
 	private static final String BOARD_TEXT="Score Is: ";
+	public static final String FONT_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	
 	public static ScoreBoard create(){
 		ScoreBoard returnValue = new ScoreBoard();
-//		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
-//				Gdx.files.internal("modern_lcd-7.ttf"));
-		returnValue.font = new BitmapFont(false);
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("modern_lcd-7.ttf"));
+		returnValue.font = generator.generateFont(18);
 		returnValue.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 		return returnValue;
 	}

@@ -25,10 +25,14 @@ public class MainActivity extends AndroidApplication {
 		config.useCompass = false;
 		config.useWakelock = true;
 		config.useGL20 = true;
-		game = new SuperHockeyGame();
+		game = new SuperHockeyGame(this);
 		initialize(game, config);
 	}
 
+	public void callOnBack(){
+		this.onBackPressed();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -40,5 +44,6 @@ public class MainActivity extends AndroidApplication {
 		// TODO Auto-generated method stub
 		game.onTouch(ev);
 		return super.dispatchTouchEvent(ev);
+		
 	}
 }
