@@ -7,10 +7,12 @@ import android.app.Activity;
 import android.view.MotionEvent;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class SuperHockeyGame extends Game {
 
 	private MainActivity gameActivity;
+	private SpriteBatch batch;
 	
 	public SuperHockeyGame(MainActivity thisAct){
 		super();
@@ -20,7 +22,12 @@ public class SuperHockeyGame extends Game {
 	@Override
 	public void create() {
 		// TODO Auto-generated method stub
-		setScreen(new HockeyScreen(this));
+		resetScreen();
+	}
+	
+	public void resetScreen(){
+		batch = new SpriteBatch();
+		setScreen(new HockeyScreen(this, batch));
 	}
 	
 	public void onTouch(MotionEvent ev){
@@ -34,5 +41,10 @@ public class SuperHockeyGame extends Game {
 		// TODO Auto-generated method stub
 //		gameActivity.callOnBack();
 		super.dispose();
+	}
+	
+	public void showMenu(){
+		//TODO: Finish wiring menu
+//		((HockeyScreen)getScreen()).showMenu();
 	}
 }

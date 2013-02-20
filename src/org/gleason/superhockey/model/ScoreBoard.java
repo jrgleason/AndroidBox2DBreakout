@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 public class ScoreBoard {
 	private long score = 0;
 	private BitmapFont font;
+	private BitmapFont font2;
 	private static final String BOARD_TEXT="Score Is: ";
 	public static final String FONT_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	
@@ -15,6 +16,10 @@ public class ScoreBoard {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("modern_lcd-7.ttf"));
 		returnValue.font = generator.generateFont(18);
 		returnValue.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+		FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(Gdx.files.internal("modern_lcd-7.ttf"));
+		returnValue.font2 = generator2.generateFont(18);
+//		returnValue.font2.setScale(1.25f);
+		returnValue.font2.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 		return returnValue;
 	}
 	
@@ -23,7 +28,11 @@ public class ScoreBoard {
 	}
 	
 	public String getScoreText(){
-		return ScoreBoard.BOARD_TEXT+String.valueOf(getScore());
+		return ScoreBoard.BOARD_TEXT;
+	}
+	
+	public String getScoreString(){
+		return String.valueOf(getScore());
 	}
 	
 	public void addPoints(long points){
@@ -38,6 +47,9 @@ public class ScoreBoard {
 	 */
 	public BitmapFont getFont() {
 		return font;
+	}
+	public BitmapFont getFont2() {
+		return font2;
 	}
 	/**
 	 * @param font the font to set

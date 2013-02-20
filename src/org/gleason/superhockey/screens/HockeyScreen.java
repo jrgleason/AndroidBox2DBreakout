@@ -3,13 +3,19 @@ package org.gleason.superhockey.screens;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.gleason.superhockey.games.SuperHockeyGame;
 import org.gleason.superhockey.model.GameActor;
+import org.gleason.superhockey.model.Neighborhood;
 import org.gleason.superhockey.model.Pad;
 import org.gleason.superhockey.model.Puck;
 import org.gleason.superhockey.model.ScoreBoard;
 import org.gleason.superhockey.model.TargetBox;
+import org.gleason.superhockey.model.box.IndustructableTargetBox;
 import org.gleason.superhockey.model.levels.Level;
 import org.gleason.superhockey.model.levels.Level1;
+import org.gleason.superhockey.model.levels.Level2;
+import org.gleason.superhockey.model.levels.Level3;
 
 import android.view.MotionEvent;
 
@@ -54,26 +60,41 @@ public class HockeyScreen implements Screen, ContactListener {
 
 	private Level level1;
 	private Level currentLevel;
-
-	private Game game;
+	private boolean paused;
 	
+	private Neighborhood daHood;
+
+	private SuperHockeyGame game;
+
 	static {
 		System.loadLibrary("gl-jni");
 	}
 
-	public HockeyScreen(Game game) {
+	public HockeyScreen(SuperHockeyGame game, SpriteBatch batch) {
+		paused = false;
 		this.game = game;
 		world = new World(getGravity(), true);
 		// World.setVelocityThreshold(0.0f);
 		world.setContactListener(this);
-		setBatch(new SpriteBatch());
+		setBatch(batch);
 		scoreBoard = ScoreBoard.create();
 		setLeftPad(Pad.create(world, 50.0f, 30.0f, false));
 		setPuck(Puck.create(world, Gdx.graphics.getWidth() / 2,
 				Gdx.graphics.getHeight() / 2, false));
-
-		level1 = new Level1();
-		level1.genBoxMap(world);
+		float value = GameActor.convertPixelsToMeters(Gdx.graphics.getWidth()-40);
+//		daHood = Neighborhood.create(GameActor.convertPixelsToMeters(230), 
+//				GameActor.convertPixelsToMeters(Gdx.graphics.getWidth()-230),
+//				GameActor.convertPixelsToMeters(Gdx.graphics.getHeight() - 200), 
+//				GameActor.convertPixelsToMeters(Gdx.graphics.getHeight()/2 + 200), 
+//				world);
+		
+		Vector2 location = new Vector2(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() - Gdx.graphics.getHeight()/3);
+//		Level3 test = new Level3();
+//		Level1 test = new Level1();
+		Level2 test = new Level2();
+		test.genBoxMap(world,location,false);
+//		test.genBoxMap(world);
+		level1 = test;
 		currentLevel = level1;
 
 		setCamera(new OrthographicCamera());
@@ -81,6 +102,8 @@ public class HockeyScreen implements Screen, ContactListener {
 				.convertPixelsToMeters(Gdx.graphics.getHeight());
 		getCamera().viewportWidth = GameActor
 				.convertPixelsToMeters(Gdx.graphics.getWidth());
+//		getCamera().position.set(getCamera().viewportWidth * .5f,
+//				getCamera().viewportHeight * .5f, 0f);
 		getCamera().position.set(getCamera().viewportWidth * .5f,
 				getCamera().viewportHeight * .5f, 0f);
 		getCamera().update();
@@ -118,63 +141,61 @@ public class HockeyScreen implements Screen, ContactListener {
 
 	@Override
 	public void render(float arg0) {
-		((Puck) puck).accelerate();
-		float currentLocation = GameActor.convertMetersToPixels(leftPad
-				.getBody().getPosition().x);
-		if (stopX != 0) {
-			if (goingRight && currentLocation > stopX) {
-				leftPadStop();
-				stopX = 0;
-			} else if (goingLeft && currentLocation < stopX) {
-				leftPadStop();
-				stopX = 0;
+		if (!paused) {
+			((Puck) puck).accelerate();
+			float currentLocation = GameActor.convertMetersToPixels(leftPad
+					.getBody().getPosition().x);
+			if (stopX != 0) {
+				if (goingRight && currentLocation > stopX) {
+					leftPadStop();
+					stopX = 0;
+				} else if (goingLeft && currentLocation < stopX) {
+					leftPadStop();
+					stopX = 0;
+				}
 			}
-		}
-
-		// if (needsStoppedUp() && goingUp) {
-		// leftPadStop();
-		// }
-		// if (needsStoppedDown() && goingDown) {
-		// leftPadStop();
-		// }
-		if (needsStoppedRight() && goingRight) {
-			leftPadStop();
-		}
-		if (needsStoppedLeft() && goingLeft) {
-			leftPadStop();
-		}
-		resetScreen();
-		// Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		// Gdx.gl.glClearColor(1, 1, 1, 1);
-		// getDebugRenderer().render(world, camera.combined);
-		Iterator<GameActor> i = deadActors.iterator();
-		while (i.hasNext()) {
-			GameActor walkingDead = i.next();
-			world.destroyBody(walkingDead.getBody());
-			if (currentLevel != null) {
-				currentLevel.getTargetBoxes().remove(walkingDead);
+			if (needsStoppedRight() && goingRight) {
+				leftPadStop();
 			}
-			i.remove();
+			if (needsStoppedLeft() && goingLeft) {
+				leftPadStop();
+			}
+			resetScreen();
+			Iterator<GameActor> i = deadActors.iterator();
+			while (i.hasNext()) {
+				GameActor walkingDead = i.next();
+				world.destroyBody(walkingDead.getBody());
+				if (currentLevel != null) {
+					currentLevel.getTargetBoxes().remove(walkingDead);
+				}
+				i.remove();
+			}
+			world.step(TIME_STEP, VELOCITY_ITTERATIONS, POSITION_ITTERATIONS);
+			if (puck.getBody().getPosition().x < 0
+					|| puck.getBody().getPosition().y < 0) {
+				puck.setDead(true);
+			}
+			debugRenderer.render( world, getCamera().combined );
+//			batch.begin();
+//			currentLevel.getBkgSprite().draw(batch);
+//			for (GameActor box : currentLevel.getTargetBoxes()) {
+//				box.drawSprite(batch);
+//			}
+//			leftPad.drawSprite(batch);
+//			scoreBoard.getFont2().draw(batch, scoreBoard.getScoreText(), 20f,
+//					currentLevel.getTopValue() - 10f);
+//			scoreBoard.getFont().draw(batch, scoreBoard.getScoreString(), 170f,
+//					currentLevel.getTopValue() - 10f);
+//			if (!puck.isDead()) {
+//				puck.drawSprite(batch);
+//			} else {
+//				scoreBoard.getFont().draw(batch,
+//						"YOU DIED! (Hit back to restart)",
+//						Gdx.graphics.getWidth() / 2 - 225,
+//						Gdx.graphics.getHeight() / 2 - 50);
+//			}
+//			batch.end();
 		}
-		world.step(TIME_STEP, VELOCITY_ITTERATIONS, POSITION_ITTERATIONS);
-		if(puck.getBody().getPosition().x<0 || puck.getBody().getPosition().y < 0){
-			puck.setDead(true);
-		}
-		batch.begin();
-		currentLevel.getBkgSprite().draw(batch);
-		for (GameActor box : currentLevel.getTargetBoxes()) {
-			box.drawSprite(batch);
-		}
-		leftPad.drawSprite(batch);
-		scoreBoard.getFont().draw(batch, scoreBoard.getScoreText(), 20f,
-				currentLevel.getTopValue() - 10f);
-		if (!puck.isDead()) {
-			puck.drawSprite(batch);
-		}
-		else{
-			scoreBoard.getFont().draw(batch, "YOU DIED! (Hit back to restart)", Gdx.graphics.getWidth()/2 - 225,Gdx.graphics.getHeight()/2-50);
-		}
-		batch.end();
 	}
 
 	private boolean needsStoppedRight() {
@@ -222,15 +243,17 @@ public class HockeyScreen implements Screen, ContactListener {
 		Body bodyA = contact.getFixtureA().getBody();
 		Body bodyB = contact.getFixtureB().getBody();
 		for (GameActor targetBox : currentLevel.getTargetBoxes()) {
-			TargetBox tb = (TargetBox) targetBox;
-
-			Body targetBoxBody = tb.getBody();
+			Body targetBoxBody = targetBox.getBody();
 			if (targetBoxBody != null
 					&& (bodyA.equals(targetBoxBody) || bodyB
 							.equals(targetBoxBody))) {
-
-				deadActors.add(tb);
-				scoreBoard.addPoints(tb.getScoreValue());
+				if (targetBox instanceof TargetBox) {
+					((TargetBox) targetBox).hit();
+					if (((TargetBox) targetBox).isDead() && !(targetBox instanceof IndustructableTargetBox)) {
+						deadActors.add(targetBox);
+						scoreBoard.addPoints(targetBox.getScoreValue());
+					}
+				}
 			}
 		}
 	}
@@ -248,10 +271,9 @@ public class HockeyScreen implements Screen, ContactListener {
 	}
 
 	public void onTouch(MotionEvent ev) {
-		if(puck.isDead()){
-			game.dispose();
-		}
-		else{
+		if (puck.isDead()) {
+			// game.resetScreen();
+		} else {
 			moveHorizantal(ev);
 		}
 	}

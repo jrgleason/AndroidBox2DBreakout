@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 public abstract class BoxActor extends GameActor {
 	private float height;
 	private float width;
+	private boolean dead;
 	
 	public BoxActor(){
 		super();
@@ -135,6 +136,11 @@ public abstract class BoxActor extends GameActor {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+	public boolean isDead(){
+		return dead;
+	}
+	public void setDead(boolean dead){
+		this.dead = dead;
+	}
 	
 }

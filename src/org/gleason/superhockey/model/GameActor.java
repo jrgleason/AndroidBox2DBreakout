@@ -1,7 +1,6 @@
 package org.gleason.superhockey.model;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -9,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 
-public abstract class GameActor {
+public abstract class GameActor implements Actor{
 	private Shape shape;
 	private Body body;
 	private boolean dead;
@@ -20,9 +19,7 @@ public abstract class GameActor {
 	public GameActor(){
 		resize();
 	}
-	public abstract void resize();
 	public abstract long getScoreValue();
-	public abstract void drawSprite(SpriteBatch batch);
 	public Fixture createFixture(){
 		FixtureDef fd = new FixtureDef();
 		fd.shape = getShape();
@@ -51,8 +48,6 @@ public abstract class GameActor {
 	public void relocate(float x, float y, float angle){
 		getBody().setTransform(new Vector2(x, y), angle);
 	}
-	
-	public abstract boolean isTouched(float x, float y);
 	
 	/**
 	 * Getters/Setters

@@ -27,8 +27,8 @@ public abstract class Level {
 		bottomValue = Level.BORDER_VAL;
 		rightValue = Gdx.graphics.getWidth() -  Level.BORDER_VAL;
 		leftValue =  Level.BORDER_VAL;
-//		barriers.add(ArenaBarrier.create(world, (Gdx.graphics.getWidth() / 2),
-//				10, (Gdx.graphics.getWidth() / 2) -  Level.BORDER_VAL, 0, false));
+		barriers.add(ArenaBarrier.create(world, (Gdx.graphics.getWidth() / 2),
+				10, (Gdx.graphics.getWidth() / 2) -  Level.BORDER_VAL, 0, false));
 		barriers.add(ArenaBarrier.create(world,  Level.BORDER_VAL,
 				Gdx.graphics.getHeight() / 2, 0, (Gdx.graphics.getHeight() / 2)
 						-  Level.BORDER_VAL, false));
@@ -122,5 +122,19 @@ public abstract class Level {
 	 */
 	public void setBkgSprite(Sprite bkgSprite) {
 		this.bkgSprite = bkgSprite;
+	}
+
+	/**
+	 * @return the barriers
+	 */
+	public List<GameActor> getBarriers() {
+		return barriers;
+	}
+
+	/**
+	 * @param barriers the barriers to set
+	 */
+	public void setBarriers(List<GameActor> barriers) {
+		this.barriers = barriers;
 	}
 }

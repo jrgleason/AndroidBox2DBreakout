@@ -1,0 +1,29 @@
+package org.gleason.superhockey.model.levels;
+
+import org.gleason.superhockey.model.TargetBox;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.physics.box2d.World;
+
+public class Level1 extends Level {
+	@Override
+	public void genBoxMap(World world) {
+		super.genBoxMap(world);
+		// TODO Auto-generated method stub
+		Texture mTexture = new Texture(Gdx.files.internal("Background.jpg"));
+		setBkgSprite(new Sprite(mTexture, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight()));
+		getBkgSprite().setPosition(0, 0);
+		for (float y = (getTopValue() / 2 + 200); y < (getTopValue() - 100); y = y
+				+ TargetBox.HEIGHT * 2) {
+			for (float x = BORDER_VAL + TargetBox.WIDTH + 50; x < getRightValue()
+					- (TargetBox.WIDTH * 2); x = x + (TargetBox.WIDTH * 2)) {
+				TargetBox tb = (TargetBox) TargetBox.create(world, x, y, false, 2);
+				getTargetBoxes().add(tb);
+			}
+		}
+	}
+
+}

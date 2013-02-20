@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 
@@ -45,5 +46,13 @@ public class MainActivity extends AndroidApplication {
 		game.onTouch(ev);
 		return super.dispatchTouchEvent(ev);
 		
+	}
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_MENU) {
+//	        game.showMenu();
+	        return super.onKeyUp(keyCode, event);
+	    } else {
+	        return super.onKeyUp(keyCode, event);
+	    }
 	}
 }

@@ -72,7 +72,7 @@ public class Puck extends GameActor {
 	
 	public void startBody(){
 		if(getBody() != null){
-			getBody().applyForceToCenter(-5.0f, -5.0f);
+			getBody().applyForceToCenter(-10.0f, -10.0f);
 		}
 	}
 	
