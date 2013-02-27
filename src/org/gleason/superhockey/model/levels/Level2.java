@@ -22,13 +22,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Level2 extends Level {
-	private float baseX = BORDER_VAL+10f*2f+20f;
+	private float baseX = BORDER_VAL+10f*2f+5f;
 	public void genBoxMap(World world, Vector2 location, boolean isMeters) {
 		Texture mTexture = new Texture(Gdx.files.internal("Background.jpg"));
 		setBkgSprite(new Sprite(mTexture, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight()));
 		getBkgSprite().setPosition(0, 0);
 		super.genBoxMap(world);
+		int numberOfCells = (Gdx.graphics.getWidth()-(int)BORDER_VAL*2)/2;
 		Grid grid = new Grid(10, 20, false);
 		grid.setLocation(location);
 		

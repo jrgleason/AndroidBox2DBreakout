@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string-array name="ballSpeedInterval">
+        <item name="Slow">Slow</item>
+        <item name="Medium">Medium</item>
+        <item name="Fast">Fast</item>
+        <item name="Light-Speed">Light Speed</item>
+    </string-array>
+    <string-array name="ballSpeedIntervalValues">
+        <item name="Slow">Slow</item>
+        <item name="Medium">Medium</item>
+        <item name="Fast">Fast</item>
+        <item name="Light-Speed">Light Speed</item>
+    </string-array>
+    <string-array name="padSpeedInterval">
+        <item name="Slow">Slow</item>
+        <item name="Medium">Medium</item>
+        <item name="Fast">Fast</item>
+        <item name="Light-Speed">Light Speed</item>
+    </string-array>
+    <string-array name="padSpeedIntervalValues">
+        <item name="Slow">Slow</item>
+        <item name="Medium">Medium</item>
+        <item name="Fast">Fast</item>
+        <item name="Light-Speed">Light Speed</item>
+    </string-array>
+    
+
+</resources>

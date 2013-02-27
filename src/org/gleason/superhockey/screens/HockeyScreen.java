@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -61,7 +62,7 @@ public class HockeyScreen implements Screen, ContactListener {
 	private Level level1;
 	private Level currentLevel;
 	private boolean paused;
-	
+
 	private Neighborhood daHood;
 
 	private SuperHockeyGame game;
@@ -81,19 +82,21 @@ public class HockeyScreen implements Screen, ContactListener {
 		setLeftPad(Pad.create(world, 50.0f, 30.0f, false));
 		setPuck(Puck.create(world, Gdx.graphics.getWidth() / 2,
 				Gdx.graphics.getHeight() / 2, false));
-		float value = GameActor.convertPixelsToMeters(Gdx.graphics.getWidth()-40);
-//		daHood = Neighborhood.create(GameActor.convertPixelsToMeters(230), 
-//				GameActor.convertPixelsToMeters(Gdx.graphics.getWidth()-230),
-//				GameActor.convertPixelsToMeters(Gdx.graphics.getHeight() - 200), 
-//				GameActor.convertPixelsToMeters(Gdx.graphics.getHeight()/2 + 200), 
-//				world);
-		
-		Vector2 location = new Vector2(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() - Gdx.graphics.getHeight()/3);
-//		Level3 test = new Level3();
-//		Level1 test = new Level1();
+		float value = GameActor
+				.convertPixelsToMeters(Gdx.graphics.getWidth() - 40);
+		// daHood = Neighborhood.create(GameActor.convertPixelsToMeters(230),
+		// GameActor.convertPixelsToMeters(Gdx.graphics.getWidth()-230),
+		// GameActor.convertPixelsToMeters(Gdx.graphics.getHeight() - 200),
+		// GameActor.convertPixelsToMeters(Gdx.graphics.getHeight()/2 + 200),
+		// world);
+
+		Vector2 location = new Vector2(Gdx.graphics.getWidth() / 2,
+				Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 3);
+		// Level3 test = new Level3();
+		// Level1 test = new Level1();
 		Level2 test = new Level2();
-		test.genBoxMap(world,location,false);
-//		test.genBoxMap(world);
+		test.genBoxMap(world, location, false);
+		// test.genBoxMap(world);
 		level1 = test;
 		currentLevel = level1;
 
@@ -102,8 +105,8 @@ public class HockeyScreen implements Screen, ContactListener {
 				.convertPixelsToMeters(Gdx.graphics.getHeight());
 		getCamera().viewportWidth = GameActor
 				.convertPixelsToMeters(Gdx.graphics.getWidth());
-//		getCamera().position.set(getCamera().viewportWidth * .5f,
-//				getCamera().viewportHeight * .5f, 0f);
+		// getCamera().position.set(getCamera().viewportWidth * .5f,
+		// getCamera().viewportHeight * .5f, 0f);
 		getCamera().position.set(getCamera().viewportWidth * .5f,
 				getCamera().viewportHeight * .5f, 0f);
 		getCamera().update();
@@ -175,26 +178,27 @@ public class HockeyScreen implements Screen, ContactListener {
 					|| puck.getBody().getPosition().y < 0) {
 				puck.setDead(true);
 			}
-			debugRenderer.render( world, getCamera().combined );
-//			batch.begin();
-//			currentLevel.getBkgSprite().draw(batch);
-//			for (GameActor box : currentLevel.getTargetBoxes()) {
-//				box.drawSprite(batch);
-//			}
-//			leftPad.drawSprite(batch);
-//			scoreBoard.getFont2().draw(batch, scoreBoard.getScoreText(), 20f,
-//					currentLevel.getTopValue() - 10f);
-//			scoreBoard.getFont().draw(batch, scoreBoard.getScoreString(), 170f,
-//					currentLevel.getTopValue() - 10f);
-//			if (!puck.isDead()) {
-//				puck.drawSprite(batch);
-//			} else {
-//				scoreBoard.getFont().draw(batch,
-//						"YOU DIED! (Hit back to restart)",
-//						Gdx.graphics.getWidth() / 2 - 225,
-//						Gdx.graphics.getHeight() / 2 - 50);
-//			}
-//			batch.end();
+			debugRenderer.render(world, getCamera().combined);
+			 batch.begin();
+			 currentLevel.getBkgSprite().draw(batch);
+			 for (GameActor box : currentLevel.getTargetBoxes()) {
+			 box.drawSprite(batch);
+			 }
+			 leftPad.drawSprite(batch);
+			 scoreBoard.getFont2().draw(batch, scoreBoard.getScoreText(), 20f,
+			 currentLevel.getTopValue() - 10f);
+			 scoreBoard.getFont().draw(batch, scoreBoard.getScoreString(),
+			 170f,
+			 currentLevel.getTopValue() - 10f);
+			 if (!puck.isDead()) {
+			 puck.drawSprite(batch);
+			 } else {
+			 scoreBoard.getFont().draw(batch,
+			 "YOU DIED! (Hit back to restart)",
+			 Gdx.graphics.getWidth() / 2 - 225,
+			 Gdx.graphics.getHeight() / 2 - 50);
+			 }
+			 batch.end();
 		}
 	}
 
@@ -249,7 +253,8 @@ public class HockeyScreen implements Screen, ContactListener {
 							.equals(targetBoxBody))) {
 				if (targetBox instanceof TargetBox) {
 					((TargetBox) targetBox).hit();
-					if (((TargetBox) targetBox).isDead() && !(targetBox instanceof IndustructableTargetBox)) {
+					if (((TargetBox) targetBox).isDead()
+							&& !(targetBox instanceof IndustructableTargetBox)) {
 						deadActors.add(targetBox);
 						scoreBoard.addPoints(targetBox.getScoreValue());
 					}
@@ -292,17 +297,54 @@ public class HockeyScreen implements Screen, ContactListener {
 		} else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
 			float currentMotion = x - startX;
 			stopX = Gdx.graphics.getWidth() - x;
-			if (currentMotion < 0 && !goingRight && !needsStoppedRight()) {
-				leftPad.getBody().setLinearVelocity(10f, 0);
+			applyForce(currentMotion);
+		}
+
+	}
+
+	private static final String PAD_SPEED_PREF_KEY = "pad_speed_interval";
+
+	private int strikeCount = 0;
+
+	private void applyForce(float currentMotion) {
+		Preferences prefs = Gdx.app.getPreferences("breakout-preferences");
+		String ballSpeed = prefs.getString(PAD_SPEED_PREF_KEY);
+		float speed;
+		if (ballSpeed != null) {
+			// Implement later
+			if (ballSpeed.equalsIgnoreCase("medium")) {
+				speed = 10.0f;
+			} else if (ballSpeed.equalsIgnoreCase("Light Speed")) {
+				speed = 30.0f;
+			} else if (ballSpeed.equalsIgnoreCase("Slow")) {
+				speed = 5.0f;
+			} else if (ballSpeed.equalsIgnoreCase("Fast")) {
+				speed = 15.0f;
+			} else {
+				speed = 10.0f;
+				prefs.putString(PAD_SPEED_PREF_KEY, "Medium");
+			}
+		} else {
+			speed = 10.0f;
+			prefs.putString(PAD_SPEED_PREF_KEY, "Medium");
+		}
+		prefs.flush();
+		if (currentMotion < 0 && !goingRight && !needsStoppedRight()) {
+			if (strikeCount == 1) {
+				leftPad.getBody().setLinearVelocity(1.0f * speed, 0);
 				goingRight = true;
 				goingLeft = false;
-			} else if (currentMotion > 0 && !goingLeft && !needsStoppedLeft()) {
-				leftPad.getBody().setLinearVelocity(-10f, 0);
+				strikeCount = 0;
+			}
+			strikeCount++;
+		} else if (currentMotion > 0 && !goingLeft && !needsStoppedLeft()) {
+			if (strikeCount == 1) {
+				leftPad.getBody().setLinearVelocity(-1.0f * speed, 0);
 				goingLeft = true;
 				goingRight = false;
 			}
+			strikeCount++;
 		}
-
 	}
 
 	private void leftPadStop() {

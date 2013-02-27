@@ -93,7 +93,7 @@ public class TargetBox extends BoxActor {
 	@Override
 	public FileHandle getImage() {
 		// TODO Auto-generated method stub
-		return Gdx.files.internal("WolverineBlock.png");
+		return Gdx.files.internal("wblock.png");
 	}
 	/**
 	 * @return the hardness

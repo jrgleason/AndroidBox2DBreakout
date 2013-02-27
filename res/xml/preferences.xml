@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory 
+        android:title="Speed Settings"
+        android:key="speed_cat">
+        <ListPreference 
+            android:key="ball_speed_interval"
+            android:title="Ball Speed"
+            android:summary="Define how fast the ball will go"
+            android:defaultValue="Medium" 
+            android:entries="@array/ballSpeedInterval"
+            android:entryValues="@array/ballSpeedIntervalValues"
+        /> 
+        <ListPreference 
+            android:key="pad_speed_interval"
+            android:title="Pad Speed"
+            android:summary="Define how fast the pad will go"
+            android:defaultValue="Medium" 
+            android:entries="@array/padSpeedInterval"
+            android:entryValues="@array/padSpeedIntervalValues"
+        />    
+    </PreferenceCategory>
+
+</PreferenceScreen>

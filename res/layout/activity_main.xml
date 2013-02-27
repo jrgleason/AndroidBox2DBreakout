@@ -15,5 +15,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:text="Welcome To Breakout (Touch Screen to start)" />
+        android:text="@string/welcome" />
+    
 </RelativeLayout>
