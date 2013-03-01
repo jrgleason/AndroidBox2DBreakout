@@ -13,13 +13,9 @@ import org.gleason.superhockey.model.ScoreBoard;
 import org.gleason.superhockey.model.TargetBox;
 import org.gleason.superhockey.model.box.IndustructableTargetBox;
 import org.gleason.superhockey.model.levels.Level;
-import org.gleason.superhockey.model.levels.Level1;
-import org.gleason.superhockey.model.levels.Level2;
-import org.gleason.superhockey.model.levels.Level3;
 
 import android.view.MotionEvent;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Input.Peripheral;
@@ -71,7 +67,7 @@ public class HockeyScreen implements Screen, ContactListener {
 		System.loadLibrary("gl-jni");
 	}
 
-	public HockeyScreen(SuperHockeyGame game, SpriteBatch batch) {
+	public HockeyScreen(SuperHockeyGame game, SpriteBatch batch, Level level) {
 		paused = false;
 		this.game = game;
 		world = new World(getGravity(), true);
@@ -94,10 +90,11 @@ public class HockeyScreen implements Screen, ContactListener {
 				Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 3);
 		// Level3 test = new Level3();
 		// Level1 test = new Level1();
-		Level2 test = new Level2();
-		test.genBoxMap(world, location, false);
+//		Level2 test = new Level2();
+//		test.genBoxMap(world, location, false);
 		// test.genBoxMap(world);
-		level1 = test;
+		level1 = level;
+		level1.genBoxMap(world, location, false);
 		currentLevel = level1;
 
 		setCamera(new OrthographicCamera());

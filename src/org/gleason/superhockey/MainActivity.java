@@ -36,7 +36,9 @@ public class MainActivity extends AndroidApplication {
 		config.useCompass = false;
 		config.useWakelock = true;
 		config.useGL20 = true;
-		game = new SuperHockeyGame(this);
+		Bundle b = getIntent().getExtras();
+		int levelNum = b.getInt("level");
+		game = new SuperHockeyGame(this, levelNum);
 		initialize(game, config);
 		loadPreferences();
 	}

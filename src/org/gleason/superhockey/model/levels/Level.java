@@ -8,6 +8,7 @@ import org.gleason.superhockey.model.GameActor;
 import org.gleason.superhockey.model.TargetBox;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 import com.badlogic.gdx.Gdx;
@@ -21,6 +22,11 @@ public abstract class Level {
 	public static final float BORDER_VAL = 10;
 	private List<GameActor> barriers = new ArrayList<GameActor>();
 	private Sprite bkgSprite;
+	private String levelMap;
+	
+	public Level(String levelMap){
+		this.setLevelMap(levelMap);
+	}
 	
 	public void genBoxMap(World world){
 		topValue = Gdx.graphics.getHeight() - Level.BORDER_VAL;
@@ -39,6 +45,8 @@ public abstract class Level {
 				-  Level.BORDER_VAL, Gdx.graphics.getHeight() / 2, 0,
 				Gdx.graphics.getHeight() / 2 -  Level.BORDER_VAL, false));
 	}
+	
+	public abstract void genBoxMap(World world, Vector2 location, boolean isMeters);
 	
 	/**
 	 * @return the topValue
@@ -136,5 +144,19 @@ public abstract class Level {
 	 */
 	public void setBarriers(List<GameActor> barriers) {
 		this.barriers = barriers;
+	}
+
+	/**
+	 * @return the levelMap
+	 */
+	public String getLevelMap() {
+		return levelMap;
+	}
+
+	/**
+	 * @param levelMap the levelMap to set
+	 */
+	public void setLevelMap(String levelMap) {
+		this.levelMap = levelMap;
 	}
 }

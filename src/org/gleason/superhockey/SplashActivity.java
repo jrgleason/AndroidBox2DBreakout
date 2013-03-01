@@ -30,7 +30,7 @@ public class SplashActivity extends Activity  {
 		    public void onClick(View v) {
 //		    	if(intent == null){
 //        			intent = new Intent(getApplicationContext(), MainActivity.class);
-		    		intent = new Intent(getApplicationContext(), LevelSelectorActivity.class);
+		    		intent = new Intent(getApplicationContext(), LevelSelectorFragmentActivity.class);
         			startActivity(intent);
 //        		}
 		    }

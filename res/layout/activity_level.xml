@@ -5,7 +5,7 @@
     android:layout_height="match_parent" 
     android:orientation="vertical">
 
-    <HorizontalScrollView
+    <!-- <HorizontalScrollView
         android:layout_width="wrap_content"
         android:layout_height="match_parent" 
         android:fillViewport="true">
@@ -31,5 +31,10 @@
          	    />
          </LinearLayout>
     </HorizontalScrollView>
-
+	-->
+	<android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/levelViewPager"
+        />
 </LinearLayout>
