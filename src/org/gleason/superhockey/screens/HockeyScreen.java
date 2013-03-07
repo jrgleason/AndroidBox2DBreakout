@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.gleason.superhockey.games.SuperHockeyGame;
 import org.gleason.superhockey.model.GameActor;
-import org.gleason.superhockey.model.Neighborhood;
 import org.gleason.superhockey.model.Pad;
 import org.gleason.superhockey.model.Puck;
 import org.gleason.superhockey.model.ScoreBoard;
@@ -60,8 +59,6 @@ public class HockeyScreen implements Screen, ContactListener {
 	private Level currentLevel;
 	private boolean paused;
 
-	private Neighborhood daHood;
-
 	private SuperHockeyGame game;
 
 	static {
@@ -81,19 +78,9 @@ public class HockeyScreen implements Screen, ContactListener {
 				Gdx.graphics.getHeight() / 2, false));
 		float value = GameActor
 				.convertPixelsToMeters(Gdx.graphics.getWidth() - 40);
-		// daHood = Neighborhood.create(GameActor.convertPixelsToMeters(230),
-		// GameActor.convertPixelsToMeters(Gdx.graphics.getWidth()-230),
-		// GameActor.convertPixelsToMeters(Gdx.graphics.getHeight() - 200),
-		// GameActor.convertPixelsToMeters(Gdx.graphics.getHeight()/2 + 200),
-		// world);
 
 		Vector2 location = new Vector2(Gdx.graphics.getWidth() / 2,
 				Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 3);
-		// Level3 test = new Level3();
-		// Level1 test = new Level1();
-//		Level2 test = new Level2();
-//		test.genBoxMap(world, location, false);
-		// test.genBoxMap(world);
 		level1 = level;
 		level1.genBoxMap(world, location, false);
 		currentLevel = level1;
