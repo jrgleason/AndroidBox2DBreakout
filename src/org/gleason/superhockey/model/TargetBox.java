@@ -107,6 +107,18 @@ public class TargetBox extends BoxActor {
 	public void setHardness(int hardness) {
 		this.hardness = hardness;
 	}
+	/**
+	 * @return the world
+	 */
+	protected World getWorld() {
+		return world;
+	}
+	/**
+	 * @param world the world to set
+	 */
+	protected void setWorld(World world) {
+		this.world = world;
+	}
 	
 	
 }

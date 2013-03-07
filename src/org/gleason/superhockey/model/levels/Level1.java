@@ -12,6 +12,7 @@ import org.gleason.superhockey.model.CellBox;
 import org.gleason.superhockey.model.GameActor;
 import org.gleason.superhockey.model.TargetBox;
 import org.gleason.superhockey.model.box.BoxType;
+import org.gleason.superhockey.model.box.PrizeBox;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -70,6 +71,11 @@ public class Level1 extends Level {
 			    	BoxType bt = BoxType.getTypeByChar(ch);
 			    	switch (bt) {
 					case EMPTY:
+						break;
+					case PRIZEBOX:
+						tb = (TargetBox)PrizeBox.createPrizeBox(world, locX, locY, true);
+				    	tb.setHardness(1);
+				    	getTargetBoxes().add(tb);
 						break;
 					default:
 						break;

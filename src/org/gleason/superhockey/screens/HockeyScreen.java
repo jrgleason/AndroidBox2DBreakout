@@ -12,6 +12,7 @@ import org.gleason.superhockey.model.Puck;
 import org.gleason.superhockey.model.ScoreBoard;
 import org.gleason.superhockey.model.TargetBox;
 import org.gleason.superhockey.model.box.IndustructableTargetBox;
+import org.gleason.superhockey.model.box.PrizeBox;
 import org.gleason.superhockey.model.levels.Level;
 
 import android.view.MotionEvent;
@@ -165,6 +166,9 @@ public class HockeyScreen implements Screen, ContactListener {
 			while (i.hasNext()) {
 				GameActor walkingDead = i.next();
 				world.destroyBody(walkingDead.getBody());
+				if(walkingDead instanceof PrizeBox){
+					((PrizeBox) walkingDead).releasePrize();
+				}
 				if (currentLevel != null) {
 					currentLevel.getTargetBoxes().remove(walkingDead);
 				}
@@ -176,26 +180,26 @@ public class HockeyScreen implements Screen, ContactListener {
 				puck.setDead(true);
 			}
 			debugRenderer.render(world, getCamera().combined);
-			 batch.begin();
-			 currentLevel.getBkgSprite().draw(batch);
-			 for (GameActor box : currentLevel.getTargetBoxes()) {
-			 box.drawSprite(batch);
-			 }
-			 leftPad.drawSprite(batch);
-			 scoreBoard.getFont2().draw(batch, scoreBoard.getScoreText(), 20f,
-			 currentLevel.getTopValue() - 10f);
-			 scoreBoard.getFont().draw(batch, scoreBoard.getScoreString(),
-			 170f,
-			 currentLevel.getTopValue() - 10f);
-			 if (!puck.isDead()) {
-			 puck.drawSprite(batch);
-			 } else {
-			 scoreBoard.getFont().draw(batch,
-			 "YOU DIED! (Hit back to restart)",
-			 Gdx.graphics.getWidth() / 2 - 225,
-			 Gdx.graphics.getHeight() / 2 - 50);
-			 }
-			 batch.end();
+//			 batch.begin();
+//			 currentLevel.getBkgSprite().draw(batch);
+//			 for (GameActor box : currentLevel.getTargetBoxes()) {
+//			 box.drawSprite(batch);
+//			 }
+//			 leftPad.drawSprite(batch);
+//			 scoreBoard.getFont2().draw(batch, scoreBoard.getScoreText(), 20f,
+//			 currentLevel.getTopValue() - 10f);
+//			 scoreBoard.getFont().draw(batch, scoreBoard.getScoreString(),
+//			 170f,
+//			 currentLevel.getTopValue() - 10f);
+//			 if (!puck.isDead()) {
+//			 puck.drawSprite(batch);
+//			 } else {
+//			 scoreBoard.getFont().draw(batch,
+//			 "YOU DIED! (Hit back to restart)",
+//			 Gdx.graphics.getWidth() / 2 - 225,
+//			 Gdx.graphics.getHeight() / 2 - 50);
+//			 }
+//			 batch.end();
 		}
 	}
 
